@@ -34,7 +34,7 @@ export default function Products(props: ProductsProps) {
   return (
     <>
       <Head>
-        <title>Explore products | ARDH SAINIK CANTEEN</title>
+        <title>Explore products | Ardh Sainik Canteen Kanti</title>
         <meta
           name="description"
           content="Explore our most-sold canteen products with at least 10% off MRP."

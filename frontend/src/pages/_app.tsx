@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>ARDH SAINIK CANTEEN | Everyday essentials & savings</title>
+        <title>Ardh Sainik Canteen Kanti</title>
         <meta
           name="description"
           content="Explore product categories, savings and visitor information for ARDH SAINIK CANTEEN, Kanti."
@@ -27,7 +27,8 @@ export default function App({ Component, pageProps }: AppProps) {
           content={site.indexable ? "index,follow" : "noindex,nofollow"}
         />
         <link rel="canonical" href={`${site.url}${path}`} />
-        <meta property="og:title" content="ARDH SAINIK CANTEEN, Kanti" />
+        <meta property="og:title" content="Ardh Sainik Canteen Kanti" />
+        <meta property="og:site_name" content="Ardh Sainik Canteen Kanti" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en_IN" />
         <meta property="og:url" content={`${site.url}${path}`} />
