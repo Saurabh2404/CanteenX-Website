@@ -47,7 +47,13 @@ export async function handler(req, res) {
       return res.status(200).send(image.body);
     }
     return res.status(404).json({ error: "Not found." });
-  } catch {
+  } catch (error) {
+    // Log diagnostic codes only; never log messages, URIs or provider payloads.
+    console.error("Website API unavailable", {
+      name: error?.name,
+      code: error?.code,
+      databaseConfigured: Boolean(process.env.MONGO_URI),
+    });
     return res
       .status(503)
       .json({ error: "The requested information is temporarily unavailable." });
