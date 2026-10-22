@@ -65,7 +65,7 @@ export default function Home({
             </em>
           </h1>
           <p>
-            Your everyday essentials at 1st Floor, SS-Complex, Station Road,
+            Your everyday essentials at Ground Floor, SS-Complex, Station Road,
             opposite Block Gate, Kanti, Bihar. Explore the ARDH SAINIK CANTEEN
             catalogue before you visit.
           </p>

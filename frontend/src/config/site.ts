@@ -1,9 +1,13 @@
 export const site = {
   name: "ARDH SAINIK CANTEEN",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001",
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3001"),
   indexable: process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true",
   address:
-    "1st Floor, SS-Complex, Station Road, opposite Block Gate, Kanti, Muzaffarpur, Bihar 843109",
+    "Ground Floor, SS-Complex, Station Road, opposite Block Gate, Kanti, Muzaffarpur, Bihar 843109",
   phone: "+91 73559 73262",
   mapsUrl: "https://www.google.com/maps?cid=1937612327649874251",
   reviewUrl: "https://www.google.com/maps?cid=1937612327649874251",

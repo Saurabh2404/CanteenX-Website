@@ -1,12 +1,9 @@
-// Server-side page loaders use the private API origin; browsers use Next's /api proxy.
 export async function apiFetch<T>(path: string): Promise<T> {
-  const origin =
-    typeof window === "undefined"
-      ? process.env.BACKEND_INTERNAL_URL ||
-        process.env.BACKEND_URL ||
-        "http://127.0.0.1:5001"
-      : "";
-  const response = await fetch(`${origin}/api${path}`, {
+  if (typeof window === "undefined") {
+    const { getPageData } = await import("@canteenx/website-backend");
+    return (await getPageData(path)) as T;
+  }
+  const response = await fetch(`/api${path}`, {
     cache: "no-store",
     signal: AbortSignal.timeout(20000),
   });

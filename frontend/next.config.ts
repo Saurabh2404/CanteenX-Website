@@ -1,13 +1,16 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
-  async rewrites() {
-    // Vercel Services owns public API routing in hosted deployments.
-    if (process.env.VERCEL) return [];
+  transpilePackages: ["@canteenx/website-backend"],
+  async headers() {
     return [
       {
-        source: "/api/:path*",
-        destination: `${process.env.BACKEND_URL || "http://127.0.0.1:5001"}/api/:path*`,
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
       },
     ];
   },

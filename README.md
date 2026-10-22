@@ -38,16 +38,16 @@ Google reviews are currently awaiting the API connection. No sample reviews are 
 
 ## Project overview
 
-The website uses Next.js, React, TypeScript, Tailwind CSS and Framer Motion, with a Node.js, Express and MongoDB backend.
+The website uses Next.js for both pages and API routes, with React, TypeScript, Tailwind CSS, Framer Motion and MongoDB.
 
 | Folder | Purpose |
 | --- | --- |
 | `frontend/` | Customer-facing pages, design and interface components |
-| `backend/` | Public catalogue, inventory access and Google reviews integration |
-| `automation/` | Service startup, verification and credential checks |
+| `backend/` | Server-only catalogue, inventory access and Google reviews logic |
+| `automation/` | Live verification and credential checks |
 | `reports/` | Generated verification results, excluded from Git |
 
-The local preview runs at **http://localhost:3001**. After private configuration is supplied, the development team can start both services with `npm run dev` and run checks with `npm test`, `npm run verify` and `npm run check:secrets`.
+The local preview runs at **http://localhost:3001**. After private configuration is supplied, the development team can start the website with `npm run dev` and run checks with `npm test`, `npm run verify` and `npm run check:secrets`.
 
 ## Confidential configuration
 
@@ -55,4 +55,8 @@ Passwords, database connection strings, API keys and other secrets must stay in 
 
 ## Hosting
 
-The root `vercel.json` deploys the frontend and backend together using Vercel Services (beta). Import the repository from its root; keep the Root Directory unset. Configure the private database connection as a server-only environment variable in Vercel. Never upload local `.env` files or place credentials in Git. The frontend reaches its paired backend through a deployment-specific internal binding.
+Import the GitHub repository into Vercel with **Root Directory: `frontend`** and **Framework: Next.js**. Include files outside the root directory so the server-only backend workspace is available. Use Node.js 22 and the default Next.js output directory.
+
+Configure `MONGO_URI` privately in Vercel environment settings. Google reviews additionally require `GOOGLE_PLACES_API_KEY` and `GOOGLE_PLACE_ID`. Do not upload local `.env` files or commit credentials. Local development reads the ignored `frontend/.env` file.
+
+Pages and `/api` endpoints deploy together. No separate backend host or port 5001 is required. Run `npm run dev` from the repository root to start everything locally on port 3001.

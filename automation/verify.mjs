@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 const frontend = process.env.VERIFY_FRONTEND_URL || "http://localhost:3001";
-const backend = process.env.VERIFY_BACKEND_URL || "http://127.0.0.1:5001";
+
 const checks = [];
 async function check(name, run) {
   try {
@@ -12,8 +12,8 @@ async function check(name, run) {
     checks.push({ name, status: "failed", message: error.message });
   }
 }
-await check("Separate backend health", async () =>
-  assert.equal((await fetch(`${backend}/api/health`)).status, 200),
+await check("Next.js API health", async () =>
+  assert.equal((await fetch(`${frontend}/api/health`)).status, 200),
 );
 await check("Pages Router renders home", async () => {
   const r = await fetch(frontend);
@@ -54,7 +54,7 @@ await check("Only live image sources reach homepage", async () => {
 });
 await check("Writes rejected", async () =>
   assert.equal(
-    (await fetch(`${backend}/api/products`, { method: "POST" })).status,
+    (await fetch(`${frontend}/api/products`, { method: "POST" })).status,
     405,
   ),
 );
