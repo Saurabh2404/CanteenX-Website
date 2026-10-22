@@ -42,15 +42,18 @@ await check(
     if (p) {
       const img = await fetch(`${frontend}${p.image}`);
       assert.equal(img.status, 200);
-      assert.equal(img.headers.get("cache-control"), "no-store");
+      assert.ok(img.headers.get("cache-control").includes("immutable"));
     }
   },
 );
 await check("Only live image sources reach homepage", async () => {
   const d = await (await fetch(`${frontend}/api/home`)).json();
-  assert.ok(d.heroProducts.length);
-  for (const p of [...d.heroProducts, ...d.categoryProducts])
+  assert.ok(d.heroImage?.url.startsWith("/api/hero/image?v="));
+  for (const p of d.categoryProducts)
     assert.ok(p.image.startsWith("/api/products/"));
+  const hero = await fetch(`${frontend}${d.heroImage.url}`);
+  assert.equal(hero.status, 200);
+  assert.equal(hero.headers.get("content-type"), "image/webp");
 });
 await check("Writes rejected", async () =>
   assert.equal(

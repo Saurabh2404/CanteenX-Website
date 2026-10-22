@@ -1,3 +1,4 @@
+import { getHeroImage } from "./services/heroService.js";
 import {
   getPublicCatalog,
   getHomeData,
@@ -38,12 +39,28 @@ export async function handler(req, res) {
       return res.status(200).json(await getGoogleReviews());
     if (path === "/home" || path === "/products")
       return res.status(200).json(await getPageData(path));
+    if (path === "/hero/image") {
+      const image = await getHeroImage();
+      if (!image)
+        return res.status(404).json({ error: "Hero image unavailable." });
+      res.setHeader("Content-Type", image.type);
+      if (req.query.v === image.version) {
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        res.setHeader("Vercel-CDN-Cache-Control", "public, s-maxage=86400");
+      }
+      res.setHeader("ETag", `"${image.version}"`);
+      return res.status(200).send(image.body);
+    }
     const match = path.match(/^\/products\/(\d+|[a-f\d]{24})\/image$/i);
     if (match) {
       const image = await getProductImage(match[1]);
       if (!image)
         return res.status(404).json({ error: "Product image unavailable." });
       res.setHeader("Content-Type", image.type);
+      if (req.query.v === image.version) {
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        res.setHeader("Vercel-CDN-Cache-Control", "public, s-maxage=86400");
+      }
       return res.status(200).send(image.body);
     }
     return res.status(404).json({ error: "Not found." });

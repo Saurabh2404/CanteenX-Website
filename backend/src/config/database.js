@@ -6,8 +6,12 @@ export async function connectDatabase() {
     .connect(process.env.MONGO_URI, {
       autoIndex: false,
       autoCreate: false,
-      serverSelectionTimeoutMS: 8000,
-      maxPoolSize: 5,
+      serverSelectionTimeoutMS: 20000,
+      connectTimeoutMS: 20000,
+      maxIdleTimeMS: 10000,
+      maxConnecting: 1,
+      retryReads: true,
+      maxPoolSize: 3,
       appName: "CanteenX-Website-ReadOnly",
     })
     .catch((error) => {

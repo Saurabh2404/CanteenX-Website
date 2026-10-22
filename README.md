@@ -60,3 +60,5 @@ Import the GitHub repository into Vercel with **Root Directory: `frontend`** and
 Configure `MONGO_URI` privately in Vercel environment settings. Google reviews additionally require `GOOGLE_PLACES_API_KEY` and `GOOGLE_PLACE_ID`. Do not upload local `.env` files or commit credentials. Local development reads the ignored `frontend/.env` file.
 
 Pages and `/api` endpoints deploy together. No separate backend host or port 5001 is required. Run `npm run dev` from the repository root to start everything locally on port 3001.
+
+The homepage hero uses one compressed collage stored in the website-only `website_assets` database collection. Original POS product images remain unchanged. Run `npm run hero:build` after changing the desired hero inventory imagery to regenerate it. Product images continue to update from POS; versioned image URLs are cached to reduce database requests.

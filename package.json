@@ -14,12 +14,14 @@
     "test": "npm test --workspace backend",
     "verify": "node automation/verify.mjs",
     "format": "prettier --write frontend/src backend/src backend/test automation frontend/next.config.ts frontend/tsconfig.json package.json frontend/package.json backend/package.json",
-    "check:secrets": "node automation/check-secrets.mjs"
+    "check:secrets": "node automation/check-secrets.mjs",
+    "hero:build": "node automation/build-hero.mjs"
   },
   "engines": {
     "node": ">=22"
   },
   "devDependencies": {
-    "prettier": "^3.9.10"
+    "prettier": "^3.9.10",
+    "sharp": "^0.35.5"
   }
 }

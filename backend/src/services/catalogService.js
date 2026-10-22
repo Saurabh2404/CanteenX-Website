@@ -1,3 +1,4 @@
+import { getHeroMetadata } from "./heroService.js";
 import { createHash } from "node:crypto";
 import { connectDatabase } from "../config/database.js";
 import Product from "../models/Product.js";
@@ -8,7 +9,7 @@ import {
   discountedBestSellers,
 } from "../utils/catalogRules.js";
 let popularity;
-export async function getCatalog() {
+async function readCatalog() {
   await connectDatabase();
   const records = await Product.find({})
     .select("_id productId name selling mrp image")
@@ -84,6 +85,22 @@ export async function getCatalog() {
   );
   return { products, popularityAvailable };
 }
+// Coalesce simultaneous requests and retain only public DTOs for one minute.
+let catalogCache;
+let catalogPending;
+export async function getCatalog() {
+  if (catalogCache && catalogCache.expires > Date.now())
+    return catalogCache.data;
+  catalogPending ??= readCatalog()
+    .then((data) => {
+      catalogCache = { data, expires: Date.now() + 60000 };
+      return data;
+    })
+    .finally(() => {
+      catalogPending = undefined;
+    });
+  return catalogPending;
+}
 export async function getPublicCatalog() {
   const data = await getCatalog();
   return {
@@ -95,7 +112,7 @@ export async function getPublicCatalog() {
 }
 export async function getHomeData() {
   const data = await getCatalog();
-  const heroProducts = data.products.filter((p) => p.image).slice(0, 40);
+  const heroImage = await getHeroMetadata();
   const categories = [...new Set(data.products.map((p) => p.category))];
   const categoryProducts = categories.flatMap((category) =>
     data.products
@@ -106,7 +123,7 @@ export async function getHomeData() {
       ),
   );
   return {
-    heroProducts,
+    heroImage,
     categoryProducts,
     bestSellers: data.popularityAvailable
       ? discountedBestSellers(data.products).slice(0, 4)
@@ -126,5 +143,13 @@ export async function getProductImage(slug) {
     /^data:image\/(webp|png|jpeg);base64,([\s\S]+)$/,
   );
   if (!match) return null;
-  return { type: `image/${match[1]}`, body: Buffer.from(match[2], "base64") };
+  const body = Buffer.from(match[2], "base64");
+  return {
+    type: `image/${match[1]}`,
+    body,
+    version: createHash("sha256")
+      .update(product.image)
+      .digest("hex")
+      .slice(0, 16),
+  };
 }

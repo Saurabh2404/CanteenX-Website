@@ -13,7 +13,12 @@ import type { GetServerSideProps } from "next";
 import { apiFetch } from "@/utils/api";
 import type { Product } from "@/types/catalog";
 type HomeProps = {
-  heroProducts: Product[];
+  heroImage: {
+    url: string;
+    width: number;
+    height: number;
+    sourceCount: number;
+  } | null;
   categoryProducts: Product[];
   bestSellers: Product[];
   unavailable?: boolean;
@@ -27,7 +32,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
   } catch {
     return {
       props: {
-        heroProducts: [],
+        heroImage: null,
         categoryProducts: [],
         bestSellers: [],
         unavailable: true,
@@ -36,7 +41,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
   }
 };
 export default function Home({
-  heroProducts,
+  heroImage,
   categoryProducts,
   bestSellers,
   unavailable = false,
@@ -88,10 +93,19 @@ export default function Home({
         </div>
         <div className="hero-photo grocery-hero">
           <span className="photo-label">FROM OUR CANTEEN SHELVES</span>
-          <div className="inventory-mosaic">
-            {heroProducts.map((p) => (
-              <img key={p.slug} src={p.image} alt={p.name} title={p.name} />
-            ))}
+          <div className="inventory-hero">
+            {heroImage ? (
+              <img
+                src={heroImage.url}
+                width={heroImage.width}
+                height={heroImage.height}
+                alt="Forty grocery and everyday essentials from our canteen inventory"
+                fetchPriority="high"
+                decoding="async"
+              />
+            ) : (
+              <p>Explore everyday essentials from our canteen.</p>
+            )}
           </div>
           <div className="photo-card">
             <ShoppingBasket />
