@@ -1,0 +1,1 @@
+{"version":"2.0.0","tasks":[{"label":"Website: frontend + backend","type":"shell","command":"npm","args":["run","dev"],"options":{"cwd":"${workspaceFolder}"},"problemMatcher":[]},{"label":"Website: verify live services","type":"shell","command":"npm","args":["run","verify"],"options":{"cwd":"${workspaceFolder}"},"problemMatcher":[]}]}
