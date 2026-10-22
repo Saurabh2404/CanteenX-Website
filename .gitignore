@@ -1,0 +1,23 @@
+node_modules/
+.next/
+**/node_modules/
+**/.next/
+.env*
+**/.env*
+!.env.example
+!**/.env.example
+.DS_Store
+*.tsbuildinfo
+reports/*-latest.json
+
+# Private credentials, keys, database dumps and local tooling output
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+service-account*.json
+*.log
+coverage/
+*.dump
+*.bak
