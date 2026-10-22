@@ -1,23 +1,37 @@
 import mongoose from "mongoose";
-let connection;
+// Reuse the same client across compiled modules and warm invocations.
+const state = (globalThis.__canteenWebsiteMongo ??= {
+  promise: null,
+  retryAfter: 0,
+});
 export async function connectDatabase() {
   if (!process.env.MONGO_URI) throw new Error("MONGO_URI is required");
-  connection ??= mongoose
+  if (state.retryAfter > Date.now()) {
+    const error = new Error(
+      "Database connection is cooling down after a failed login or network request.",
+    );
+    error.name = "DatabaseCooldownError";
+    throw error;
+  }
+  state.promise ??= mongoose
     .connect(process.env.MONGO_URI, {
       autoIndex: false,
       autoCreate: false,
-      serverSelectionTimeoutMS: 20000,
-      connectTimeoutMS: 20000,
-      maxIdleTimeMS: 10000,
+      maxPoolSize: 1,
+      minPoolSize: 0,
       maxConnecting: 1,
+      maxIdleTimeMS: 10000,
+      waitQueueTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
+      connectTimeoutMS: 10000,
       retryReads: true,
-      maxPoolSize: 3,
       appName: "CanteenX-Website-ReadOnly",
     })
     .catch((error) => {
-      connection = undefined;
+      state.promise = null;
+      state.retryAfter = Date.now() + 60000;
       throw error;
     });
-  await connection;
+  await state.promise;
   return mongoose.connection;
 }

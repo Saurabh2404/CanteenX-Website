@@ -37,8 +37,14 @@ export async function handler(req, res) {
         .json({ status: "ok", service: "canteenx-website-nextjs" });
     if (path === "/reviews")
       return res.status(200).json(await getGoogleReviews());
-    if (path === "/home" || path === "/products")
-      return res.status(200).json(await getPageData(path));
+    if (path === "/home" || path === "/products") {
+      const data = await getPageData(path);
+      res.setHeader(
+        "Cache-Control",
+        "public, max-age=0, s-maxage=60, stale-while-revalidate=300",
+      );
+      return res.status(200).json(data);
+    }
     if (path === "/hero/image") {
       const image = await getHeroImage();
       if (!image)

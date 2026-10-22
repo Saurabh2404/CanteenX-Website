@@ -18,7 +18,7 @@
     "hero:build": "node automation/build-hero.mjs"
   },
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   },
   "devDependencies": {
     "prettier": "^3.9.10",

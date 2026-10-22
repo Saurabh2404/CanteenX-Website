@@ -73,10 +73,7 @@ async function readCatalog() {
       popularityRank: popularityAvailable
         ? (popularity?.ranks.get(String(p._id)) ?? 0)
         : 0,
-      image:
-        typeof p.image === "string" && p.image
-          ? `/api/products/${p.productId ?? p._id}/image?v=${createHash("sha256").update(p.image).digest("hex").slice(0, 16)}`
-          : "",
+      image: typeof p.image === "string" && p.image ? p.image : "",
     }));
   products.sort(
     (a, b) =>

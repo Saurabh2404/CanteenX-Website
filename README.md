@@ -13,7 +13,7 @@ A public website for ARDH SAINIK CANTEEN, Kanti, helping customers explore every
 
 ## Product updates
 
-The website uses the same product database as the canteen’s POS application. Product details and images are maintained through POS and appear on the website without maintaining a separate catalogue. Updates appear as pages reload or refresh; sales rankings refresh approximately every minute.
+The website uses the same product database as the canteen’s POS application. Product details and images are maintained through POS. Public pages are cached and refreshed in the background approximately every minute. Customers receive the last successful page while a refresh is in progress.
 
 Products without an inventory image display a placeholder. Category groupings are currently inferred from product names. The public catalogue is for browsing; availability and final prices should be confirmed with the store. Online ordering and payment are not currently offered.
 
@@ -61,4 +61,4 @@ Configure `MONGO_URI` privately in Vercel environment settings. Google reviews a
 
 Pages and `/api` endpoints deploy together. No separate backend host or port 5001 is required. Run `npm run dev` from the repository root to start everything locally on port 3001.
 
-The homepage hero uses one compressed collage stored in the website-only `website_assets` database collection. Original POS product images remain unchanged. Run `npm run hero:build` after changing the desired hero inventory imagery to regenerate it. Product images continue to update from POS; versioned image URLs are cached to reduce database requests.
+The homepage hero uses one compressed collage stored in the website-only `website_assets` database collection. Original POS product images remain unchanged. Run `npm run hero:build` after changing the desired hero inventory imagery to regenerate it. Product photos are included as encoded image data in cached public pages, so ordinary page views do not open a database connection for each photo. The hero is also read from the database and embedded as one image. No product image files or catalogue exports are committed to the repository.

@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 const frontend = process.env.VERIFY_FRONTEND_URL || "http://localhost:3001";
-
 const checks = [];
 async function check(name, run) {
   try {
@@ -12,65 +11,67 @@ async function check(name, run) {
     checks.push({ name, status: "failed", message: error.message });
   }
 }
-await check("Next.js API health", async () =>
-  assert.equal((await fetch(`${frontend}/api/health`)).status, 200),
-);
-await check("Pages Router renders home", async () => {
-  const r = await fetch(frontend);
+async function page(path) {
+  const r = await fetch(frontend + path);
   assert.equal(r.status, 200);
   const html = await r.text();
-  assert.ok(html.includes("__NEXT_DATA__"));
-  assert.ok(html.includes("73559"));
-});
+  const match = html.match(
+    /<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/,
+  );
+  assert.ok(match);
+  return { html, props: JSON.parse(match[1]).props.pageProps };
+}
+await check("Next.js API health", async () =>
+  assert.equal((await fetch(frontend + "/api/health")).status, 200),
+);
 await check(
-  "Eligible products are sold, >=10% discount, ranked by sales",
+  "Cached homepage embeds one database hero and category photos",
   async () => {
-    const r = await fetch(`${frontend}/api/products`);
-    assert.equal(r.status, 200);
-    const d = await r.json();
-    assert.ok(d.products.length);
-    for (const p of d.products) {
-      assert.ok(p.discount + 1e-9 >= 10);
-      assert.ok(p.popularityRank > 0);
-      assert.ok(!("landing" in p));
-    }
-    for (let i = 1; i < d.products.length; i++)
-      assert.ok(
-        d.products[i - 1].popularityRank <= d.products[i].popularityRank,
-      );
-    const p = d.products.find((p) => p.image);
-    if (p) {
-      const img = await fetch(`${frontend}${p.image}`);
-      assert.equal(img.status, 200);
-      assert.ok(img.headers.get("cache-control").includes("immutable"));
-    }
+    const { html, props } = await page("/");
+    assert.ok(html.includes("73559"));
+    assert.match(props.heroImage.url, /^data:image\/webp;base64,/);
+    for (const p of props.categoryProducts)
+      assert.match(p.image, /^data:image\//);
+    assert.ok(!html.includes('src="/api/products/'));
+    assert.ok(!html.includes('src="/api/hero/'));
+    const image = await fetch(props.heroImage.url);
+    assert.equal(image.headers.get("content-type"), "image/webp");
   },
 );
-await check("Only live image sources reach homepage", async () => {
-  const d = await (await fetch(`${frontend}/api/home`)).json();
-  assert.ok(d.heroImage?.url.startsWith("/api/hero/image?v="));
-  for (const p of d.categoryProducts)
-    assert.ok(p.image.startsWith("/api/products/"));
-  const hero = await fetch(`${frontend}${d.heroImage.url}`);
-  assert.equal(hero.status, 200);
-  assert.equal(hero.headers.get("content-type"), "image/webp");
-});
-await check("Writes rejected", async () =>
+await check(
+  "Cached catalogue keeps sold products with at least 10% discount",
+  async () => {
+    const { html, props } = await page("/products");
+    assert.ok(props.products.length);
+    let previous = 0;
+    for (const p of props.products) {
+      assert.ok(p.discount + 1e-9 >= 10);
+      assert.ok(p.popularityRank >= previous && p.popularityRank > 0);
+      previous = p.popularityRank;
+      assert.ok(!("landing" in p));
+      if (p.image) assert.match(p.image, /^data:image\//);
+    }
+    assert.ok(!html.includes('src="/api/products/'));
+  },
+);
+await check("Writes rejected without database access", async () =>
   assert.equal(
-    (await fetch(`${frontend}/api/products`, { method: "POST" })).status,
+    (await fetch(frontend + "/api/products", { method: "POST" })).status,
     405,
   ),
 );
-await check("No stored review fallback", async () => {
-  const d = await (await fetch(`${frontend}/api/reviews`)).json();
+await check("No stored Google review fallback", async () => {
+  const d = await (await fetch(frontend + "/api/reviews")).json();
   assert.ok(["ready", "not-configured", "unavailable"].includes(d.status));
   assert.ok(d.source !== "verified-snapshot");
 });
-const report = { checkedAt: new Date().toISOString(), checks };
-const path = fileURLToPath(
-  new URL("../reports/verification-latest.json", import.meta.url),
+await fs.writeFile(
+  fileURLToPath(
+    new URL("../reports/verification-latest.json", import.meta.url),
+  ),
+  JSON.stringify({ checkedAt: new Date().toISOString(), checks }, null, 2) +
+    "\n",
 );
-await fs.writeFile(path, JSON.stringify(report, null, 2) + "\n");
 for (const c of checks)
   console.log(
     `${c.status.toUpperCase()}: ${c.name}${c.message ? " — " + c.message : ""}`,

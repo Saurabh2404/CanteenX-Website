@@ -6,11 +6,20 @@ export async function getHeroMetadata() {
     .collection(collectionName)
     .findOne(
       { _id: "homepage-hero" },
-      { projection: { version: 1, width: 1, height: 1, sourceCount: 1 } },
+      {
+        projection: {
+          body: 1,
+          contentType: 1,
+          version: 1,
+          width: 1,
+          height: 1,
+          sourceCount: 1,
+        },
+      },
     );
   return asset
     ? {
-        url: `/api/hero/image?v=${asset.version}`,
+        url: `data:${asset.contentType};base64,${Buffer.from(asset.body.buffer ?? asset.body).toString("base64")}`,
         width: asset.width,
         height: asset.height,
         sourceCount: asset.sourceCount,

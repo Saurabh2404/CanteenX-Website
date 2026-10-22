@@ -1,5 +1,6 @@
 import Head from "next/head";
-import type { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+import type { GetStaticProps } from "next";
 import { Catalog } from "@/components/catalog";
 import { apiFetch } from "@/utils/api";
 import type { Product } from "@/types/catalog";
@@ -10,34 +11,26 @@ type ProductsProps = {
   initialQuery: string;
   unavailable: boolean;
 };
-export const getServerSideProps: GetServerSideProps<ProductsProps> = async ({
-  query,
-  res,
-}) => {
-  res.setHeader("Cache-Control", "no-store");
-  const selection = {
-    initialCategory:
-      typeof query.category === "string" ? query.category : "all",
-    initialQuery: typeof query.q === "string" ? query.q : "",
+export const getStaticProps: GetStaticProps<ProductsProps> = async () => {
+  const data = await apiFetch<{
+    products: Product[];
+    popularityAvailable: boolean;
+  }>("/products");
+  return {
+    props: {
+      ...data,
+      initialCategory: "all",
+      initialQuery: "",
+      unavailable: false,
+    },
+    revalidate: 60,
   };
-  try {
-    const data = await apiFetch<{
-      products: Product[];
-      popularityAvailable: boolean;
-    }>("/products");
-    return { props: { ...data, ...selection, unavailable: false } };
-  } catch {
-    return {
-      props: {
-        products: [],
-        popularityAvailable: false,
-        ...selection,
-        unavailable: true,
-      },
-    };
-  }
 };
 export default function Products(props: ProductsProps) {
+  const router = useRouter();
+  const initialCategory =
+    typeof router.query.category === "string" ? router.query.category : "all";
+  const initialQuery = typeof router.query.q === "string" ? router.query.q : "";
   return (
     <>
       <Head>
@@ -59,8 +52,10 @@ export default function Products(props: ProductsProps) {
           </p>
         ) : (
           <Catalog
-            key={`${props.initialCategory}:${props.initialQuery}`}
+            key={`${initialCategory}:${initialQuery}`}
             {...props}
+            initialCategory={initialCategory}
+            initialQuery={initialQuery}
           />
         )}
       </main>

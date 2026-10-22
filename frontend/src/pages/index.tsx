@@ -9,7 +9,7 @@ import {
   HeartHandshake,
 } from "lucide-react";
 import { categories, site } from "@/config/site";
-import type { GetServerSideProps } from "next";
+import type { GetStaticProps } from "next";
 import { apiFetch } from "@/utils/api";
 import type { Product } from "@/types/catalog";
 type HomeProps = {
@@ -23,23 +23,11 @@ type HomeProps = {
   bestSellers: Product[];
   unavailable?: boolean;
 };
-export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
-  res,
-}) => {
-  res.setHeader("Cache-Control", "no-store");
-  try {
-    return { props: await apiFetch<HomeProps>("/home") };
-  } catch {
-    return {
-      props: {
-        heroImage: null,
-        categoryProducts: [],
-        bestSellers: [],
-        unavailable: true,
-      },
-    };
-  }
-};
+// Vercel serves the cached page; one background refresh updates public inventory.
+export const getStaticProps: GetStaticProps<HomeProps> = async () => ({
+  props: await apiFetch<HomeProps>("/home"),
+  revalidate: 60,
+});
 export default function Home({
   heroImage,
   categoryProducts,
