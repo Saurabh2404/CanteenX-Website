@@ -1,0 +1,25 @@
+{
+  "name": "canteenx-website",
+  "version": "0.2.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "node automation/run-services.mjs dev",
+    "start": "node automation/run-services.mjs start",
+    "build": "npm run build --workspace frontend",
+    "typecheck": "npm run typecheck --workspace frontend",
+    "test": "npm test --workspace backend",
+    "verify": "node automation/verify.mjs",
+    "format": "prettier --write frontend/src backend/src backend/test automation frontend/next.config.ts frontend/tsconfig.json package.json frontend/package.json backend/package.json",
+    "check:secrets": "node automation/check-secrets.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10"
+  }
+}
