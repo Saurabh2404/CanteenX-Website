@@ -52,3 +52,7 @@ The local preview runs at **http://localhost:3001**. After private configuration
 ## Confidential configuration
 
 Passwords, database connection strings, API keys and other secrets must stay in private environment configuration. They must never be added to this README, source files, screenshots or Git commits. Public business contact information is included above for customer use.
+
+## Hosting
+
+The root `vercel.json` deploys the frontend and backend together using Vercel Services (beta). Import the repository from its root; keep the Root Directory unset. Configure the private database connection as a server-only environment variable in Vercel. Never upload local `.env` files or place credentials in Git. The frontend reaches its paired backend through a deployment-specific internal binding.

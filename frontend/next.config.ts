@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
   async rewrites() {
+    // Vercel Services owns public API routing in hosted deployments.
+    if (process.env.VERCEL) return [];
     return [
       {
         source: "/api/:path*",
