@@ -22,9 +22,9 @@ The website reads inventory information and does not modify POS records or publi
 ## Business information
 
 **ARDH SAINIK CANTEEN**  
-1st Floor, SS-Complex, Station Road, opposite Block Gate, Kanti, Muzaffarpur, Bihar 843109.
+Ground Floor, SS-Complex, Station Road, opposite Block Gate, Kanti, Muzaffarpur, Bihar 843109.
 
-**Phone and WhatsApp:** +91 7355973262
+
 
 ## Before public launch
 
