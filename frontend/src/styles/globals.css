@@ -324,7 +324,7 @@ nav a:hover,
   letter-spacing: 3px;
   margin-bottom: 24px;
 }
-.offer-art h3 {
+.offer-art-title {
   font:
     38px/1.1 Georgia,
     serif;
@@ -470,14 +470,14 @@ footer > small {
   gap: 8px;
   flex-wrap: wrap;
 }
-.filters button {
+.filters a {
   border: 1px solid var(--line);
   padding: 9px 15px;
   background: transparent;
   font-size: 12px;
   color: var(--ink);
 }
-.filters button.active {
+.filters a.active {
   background: var(--green);
   color: white;
 }
