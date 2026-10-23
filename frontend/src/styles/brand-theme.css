@@ -1394,6 +1394,8 @@ footer .footer-grid {
   align-items: start;
 }
 .product-detail .product-image {
+  width: 100%;
+  height: auto;
   aspect-ratio: 1;
   background: #f0f5f2;
   border-radius: 20px;
