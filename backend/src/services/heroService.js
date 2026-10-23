@@ -1,7 +1,13 @@
 import { connectDatabase } from "../config/database.js";
 const collectionName = "website_assets";
+async function assetDatabase() {
+  const connection = await connectDatabase();
+  return process.env.HERO_DATABASE_NAME
+    ? connection.useDb(process.env.HERO_DATABASE_NAME, { useCache: true })
+    : connection;
+}
 export async function getHeroMetadata() {
-  const db = await connectDatabase();
+  const db = await assetDatabase();
   const asset = await db
     .collection(collectionName)
     .findOne(
@@ -27,7 +33,7 @@ export async function getHeroMetadata() {
     : null;
 }
 export async function getHeroImage() {
-  const db = await connectDatabase();
+  const db = await assetDatabase();
   const asset = await db
     .collection(collectionName)
     .findOne({ _id: "homepage-hero" });
