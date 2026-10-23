@@ -52,12 +52,15 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
             <p>{site.address}</p>
           </div>
         </div>
-        <small>
-          © {new Date().getFullYear()} ARDH SAINIK CANTEEN, Kanti · Made with ❤️ by{" "}
-          <a href="https://rapidsaurabh.vercel.app/" target="_blank" rel="noopener noreferrer">
-            rapidsaurabh
-          </a>
-        </small>
+        <div className="footer-bottom">
+          <small>© {new Date().getFullYear()} ARDH SAINIK CANTEEN, Kanti</small>
+          <strong className="footer-credit">
+            Made with ❤️ by{" "}
+            <a href="https://rapidsaurabh.vercel.app/" target="_blank" rel="noopener noreferrer">
+              rapidsaurabh
+            </a>
+          </strong>
+        </div>
       </footer>
     </>
   );
