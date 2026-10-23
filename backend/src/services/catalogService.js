@@ -1,5 +1,6 @@
 import { getHeroMetadata } from "./heroService.js";
-import { createHash } from "node:crypto";
+import { createSnapshotCache } from "../utils/snapshotCache.js";
+import { decodeProductImage, publicProduct } from "../utils/images.js";
 import { connectDatabase } from "../config/database.js";
 import Product from "../models/Product.js";
 import Sale from "../models/Sale.js";
@@ -52,8 +53,9 @@ async function readCatalog() {
         ranks: new Map(rows.map((r, i) => [String(r._id), i + 1])),
       };
     }
-  } catch {
-    popularityAvailable = false;
+  } catch (error) {
+    // Keep the last successful ISR page instead of publishing an empty catalogue.
+    throw error;
   }
   const products = records
     .filter(
@@ -82,27 +84,17 @@ async function readCatalog() {
   );
   return { products, popularityAvailable };
 }
-// Coalesce simultaneous requests and retain only public DTOs for one minute.
-let catalogCache;
-let catalogPending;
+// Shared even when Next bundles this service into multiple server modules.
+const snapshot = (globalThis.__canteenWebsiteCatalog ??=
+  createSnapshotCache(readCatalog));
 export async function getCatalog() {
-  if (catalogCache && catalogCache.expires > Date.now())
-    return catalogCache.data;
-  catalogPending ??= readCatalog()
-    .then((data) => {
-      catalogCache = { data, expires: Date.now() + 60000 };
-      return data;
-    })
-    .finally(() => {
-      catalogPending = undefined;
-    });
-  return catalogPending;
+  return snapshot.get();
 }
 export async function getPublicCatalog() {
   const data = await getCatalog();
   return {
     products: data.popularityAvailable
-      ? discountedBestSellers(data.products)
+      ? discountedBestSellers(data.products).map(publicProduct)
       : [],
     popularityAvailable: data.popularityAvailable,
   };
@@ -121,32 +113,18 @@ export async function getHomeData() {
   );
   return {
     heroImage,
-    categoryProducts,
+    categoryProducts: categoryProducts.map(publicProduct),
     bestSellers: data.popularityAvailable
-      ? discountedBestSellers(data.products).slice(0, 4)
+      ? discountedBestSellers(data.products).slice(0, 4).map(publicProduct)
       : [],
   };
 }
-export async function getProductImage(slug) {
-  await connectDatabase();
-  const query = /^\d+$/.test(slug)
-    ? { productId: Number(slug) }
-    : { _id: slug };
-  const product = await Product.findOne(query)
-    .select("image -_id")
-    .lean()
-    .maxTimeMS(5000);
-  const match = product?.image?.match(
-    /^data:image\/(webp|png|jpeg);base64,([\s\S]+)$/,
-  );
-  if (!match) return null;
-  const body = Buffer.from(match[2], "base64");
-  return {
-    type: `image/${match[1]}`,
-    body,
-    version: createHash("sha256")
-      .update(product.image)
-      .digest("hex")
-      .slice(0, 16),
-  };
+export async function getProductImage(slug, version) {
+  const data = await snapshot.get({ allowStale: true });
+  for (const source of [data, snapshot.previous()]) {
+    const product = source?.products.find((p) => p.slug === slug);
+    const image = decodeProductImage(product?.image);
+    if (image && (!version || image.version === version)) return image;
+  }
+  return null;
 }

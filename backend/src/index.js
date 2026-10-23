@@ -1,3 +1,4 @@
+import { sendImage } from "./utils/images.js";
 import { getHeroImage } from "./services/heroService.js";
 import {
   getPublicCatalog,
@@ -45,29 +46,23 @@ export async function handler(req, res) {
       );
       return res.status(200).json(data);
     }
-    if (path === "/hero/image") {
-      const image = await getHeroImage();
-      if (!image)
-        return res.status(404).json({ error: "Hero image unavailable." });
-      res.setHeader("Content-Type", image.type);
-      if (req.query.v === image.version) {
-        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-        res.setHeader("Vercel-CDN-Cache-Control", "public, s-maxage=86400");
-      }
-      res.setHeader("ETag", `"${image.version}"`);
-      return res.status(200).send(image.body);
+    const hero = path.match(/^\/images\/hero\/([a-f\d]{16,64})$/i);
+    if (hero || path === "/hero/image") {
+      const version =
+        hero?.[1] ||
+        (typeof req.query.v === "string" ? req.query.v : undefined);
+      return sendImage(req, res, await getHeroImage(version), version);
     }
-    const match = path.match(/^\/products\/(\d+|[a-f\d]{24})\/image$/i);
-    if (match) {
-      const image = await getProductImage(match[1]);
-      if (!image)
-        return res.status(404).json({ error: "Product image unavailable." });
-      res.setHeader("Content-Type", image.type);
-      if (req.query.v === image.version) {
-        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-        res.setHeader("Vercel-CDN-Cache-Control", "public, s-maxage=86400");
-      }
-      return res.status(200).send(image.body);
+    const match = path.match(
+      /^\/images\/products\/(\d+|[a-f\d]{24})\/([a-f\d]{16})$/i,
+    );
+    const legacy = path.match(/^\/products\/(\d+|[a-f\d]{24})\/image$/i);
+    if (match || legacy) {
+      const slug = (match || legacy)[1];
+      const version =
+        match?.[2] ||
+        (typeof req.query.v === "string" ? req.query.v : undefined);
+      return sendImage(req, res, await getProductImage(slug, version), version);
     }
     return res.status(404).json({ error: "Not found." });
   } catch (error) {
