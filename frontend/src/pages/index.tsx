@@ -1,3 +1,4 @@
+import { StructuredData } from "@/components/page-seo";
 import Head from "next/head";
 import { GoogleReviewsSection } from "@/components/google-reviews";
 import Link from "next/link";
@@ -15,17 +16,20 @@ import { apiFetch } from "@/utils/api";
 import type { Product } from "@/types/catalog";
 const faqs = [
   {
-    "question": "Can I order products online?",
-    "answer": "This website helps you explore products and plan an in-store visit. Online ordering is not currently available."
+    question: "Can I order products online?",
+    answer:
+      "This website helps you explore products and plan an in-store visit. Online ordering is not currently available.",
   },
   {
-    "question": "Are the displayed prices and offers final?",
-    "answer": "The catalogue reads current POS selling prices and MRPs and refreshes every minute. Prices and availability may change; please confirm at the canteen."
+    question: "Are the displayed prices and offers final?",
+    answer:
+      "The catalogue reads current POS selling prices and MRPs and refreshes every minute. Prices and availability may change; please confirm at the canteen.",
   },
   {
-    "question": "Where can I find the latest opening hours?",
-    "answer": "Confirmed timings and holiday announcements will appear in the visitor information section."
-  }
+    question: "Where can I find the latest opening hours?",
+    answer:
+      "Confirmed timings and holiday announcements will appear in the visitor information section.",
+  },
 ];
 type HomeProps = {
   heroImage: {
@@ -52,11 +56,45 @@ export default function Home({
   return (
     <main id="main">
       <Head>
-        <script type="application/ld+json" key="faq-schema" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          "@context": "https://schema.org", "@type": "FAQPage",
-          mainEntity: faqs.map(({question, answer}) => ({"@type":"Question", name:question, acceptedAnswer:{"@type":"Answer",text:answer}}))
-        }).replace(/</g, "\\u003c") }} />
+        <script
+          type="application/ld+json"
+          key="faq-schema"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqs.map(({ question, answer }) => ({
+                "@type": "Question",
+                name: question,
+                acceptedAnswer: { "@type": "Answer", text: answer },
+              })),
+            }).replace(/</g, "\\u003c"),
+          }}
+        />
       </Head>
+      <StructuredData
+        id="business-schema"
+        value={{
+          "@context": "https://schema.org",
+          "@type": "GroceryStore",
+          "@id": `${site.url}/#canteen`,
+          name: "Ardh Sainik Canteen Kanti",
+          url: site.url,
+          telephone: "+917355973262",
+          logo: `${site.url}/canteen-logo.png`,
+          image: `${site.url}/canteen-logo.png`,
+          hasMap: site.mapsUrl,
+          address: {
+            "@type": "PostalAddress",
+            streetAddress:
+              "Ground Floor, SS-Complex, Station Road, opposite Block Gate",
+            addressLocality: "Kanti, Muzaffarpur",
+            addressRegion: "Bihar",
+            postalCode: "843109",
+            addressCountry: "IN",
+          },
+        }}
+      />
       {unavailable && (
         <p className="notice">
           Our catalogue is temporarily unavailable. Please try again shortly or
@@ -70,12 +108,12 @@ export default function Home({
             अर्ध सैनिक कैंटीन
           </p>
           <h1>
-            Everyday essentials.
+            Ardh Sainik Canteen Kanti.
             <br />
             <em>
-              More value for
+              Everyday essentials.
               <br />
-              every family.
+              More value for every family.
             </em>
           </h1>
           <p>
@@ -109,7 +147,7 @@ export default function Home({
                 src={heroImage.url}
                 width={heroImage.width}
                 height={heroImage.height}
-                alt="Forty grocery and everyday essentials from our canteen inventory"
+                alt={`${heroImage.sourceCount} grocery and everyday essentials from our canteen inventory`}
                 fetchPriority="high"
                 decoding="async"
               />
@@ -154,7 +192,8 @@ export default function Home({
             <Link
               className="category"
               key={c.slug}
-              href={`/products?category=${c.slug}`}
+              href={`/products/category/${c.slug}`}
+              prefetch={false}
             >
               <div
                 className={`category-image category-preview category-tone-${c.tone}`}
@@ -177,6 +216,9 @@ export default function Home({
                         src={product.image}
                         alt={product.name}
                         loading="lazy"
+                        width={160}
+                        height={160}
+                        decoding="async"
                       />
                     ))}
                 </div>
@@ -209,13 +251,21 @@ export default function Home({
           <div className="category-grid">
             {bestSellers.map((p) => (
               <Link
-                href={`/products?q=${encodeURIComponent(p.name)}`}
+                href={`/products/item/${p.slug}`}
+                prefetch={false}
                 className="product"
                 key={p.slug}
               >
                 <div className="product-image">
                   {p.image ? (
-                    <img src={p.image} alt={p.name} loading="lazy" />
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      loading="lazy"
+                      width={320}
+                      height={320}
+                      decoding="async"
+                    />
                   ) : (
                     <span className="no-photo">
                       Product photo
@@ -251,11 +301,11 @@ export default function Home({
         <div className="offer-art">
           <span>EVERYDAY VALUE</span>
           <ShoppingBasket size={95} strokeWidth={1} />
-          <h3>
+          <p className="offer-art-title">
             Good things.
             <br />
             Better value.
-          </h3>
+          </p>
           <small>Explore our canteen catalogue</small>
         </div>
       </section>

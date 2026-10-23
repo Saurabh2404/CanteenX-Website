@@ -17,6 +17,8 @@ function ReviewCard({ review }: { review: GoogleReview }) {
             alt=""
             loading="lazy"
             referrerPolicy="no-referrer"
+            width={44}
+            height={44}
           />
         ) : (
           <span className="review-avatar">{review.author.slice(0, 1)}</span>
