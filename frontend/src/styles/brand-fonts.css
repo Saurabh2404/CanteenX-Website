@@ -3,35 +3,35 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(/fonts/brand-0.ttf) format("truetype");
+  src: url(/fonts/brand-0.woff2) format("woff2");
 }
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(/fonts/brand-1.ttf) format("truetype");
+  src: url(/fonts/brand-1.woff2) format("woff2");
 }
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url(/fonts/brand-2.ttf) format("truetype");
+  src: url(/fonts/brand-2.woff2) format("woff2");
 }
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url(/fonts/brand-3.ttf) format("truetype");
+  src: url(/fonts/brand-3.woff2) format("woff2");
 }
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 800;
   font-display: swap;
-  src: url(/fonts/brand-4.ttf) format("truetype");
+  src: url(/fonts/brand-4.woff2) format("woff2");
 }
 @font-face {
   font-family: "Noto Sans Devanagari";
@@ -39,7 +39,7 @@
   font-weight: 500;
   font-stretch: normal;
   font-display: swap;
-  src: url(/fonts/brand-5.ttf) format("truetype");
+  src: url(/fonts/brand-5.woff2) format("woff2");
 }
 @font-face {
   font-family: "Noto Sans Devanagari";
@@ -47,7 +47,7 @@
   font-weight: 600;
   font-stretch: normal;
   font-display: swap;
-  src: url(/fonts/brand-6.ttf) format("truetype");
+  src: url(/fonts/brand-6.woff2) format("woff2");
 }
 @font-face {
   font-family: "Noto Sans Devanagari";
@@ -55,5 +55,5 @@
   font-weight: 700;
   font-stretch: normal;
   font-display: swap;
-  src: url(/fonts/brand-7.ttf) format("truetype");
+  src: url(/fonts/brand-7.woff2) format("woff2");
 }

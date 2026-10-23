@@ -17,7 +17,12 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
         <div className="footer-grid">
           <div>
             <a className="footer-brand" href="/">
-              <img src="/canteen-logo.png" alt="" width={58} height={58} />
+              <img
+                src="/canteen-logo-small.webp"
+                alt=""
+                width={58}
+                height={58}
+              />
               <span>
                 <strong lang="hi">अर्ध सैनिक कैंटीन</strong>
                 <b>ARDH SAINIK CANTEEN</b>
@@ -56,7 +61,11 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
           <small>© {new Date().getFullYear()} ARDH SAINIK CANTEEN, Kanti</small>
           <strong className="footer-credit">
             Made with ❤️ by{" "}
-            <a href="https://rapidsaurabh.vercel.app/" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://rapidsaurabh.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               rapidsaurabh
             </a>
           </strong>

@@ -17,7 +17,7 @@ export function Header() {
       <header>
         <Link href="/" className="brand">
           <img
-            src="/canteen-logo.png"
+            src="/canteen-logo-small.webp"
             alt="Ardh Sainik Canteen logo"
             width={64}
             height={64}
