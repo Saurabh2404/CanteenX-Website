@@ -1,14 +1,66 @@
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 const frontend = process.env.VERIFY_FRONTEND_URL || "http://localhost:3001";
 const checks = [],
   measurements = {};
-const request = (path, options = {}) =>
-  fetch(new URL(path, frontend), {
-    signal: AbortSignal.timeout(30000),
-    ...options,
-  });
+const execute = promisify(execFile);
+async function request(path, options = {}) {
+  const deployment = process.env.VERIFY_VERCEL_DEPLOYMENT;
+  if (!deployment)
+    return fetch(new URL(path, frontend), {
+      signal: AbortSignal.timeout(30000),
+      ...options,
+    });
+  const directory = await fs.mkdtemp(join(tmpdir(), "canteen-preview-check-"));
+  try {
+    const headersPath = join(directory, "headers"),
+      bodyPath = join(directory, "body");
+    const args = [
+      "curl",
+      path,
+      "--deployment",
+      deployment,
+      "--scope",
+      "saurabh2404s-projects",
+      "--",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "30",
+      "--dump-header",
+      headersPath,
+      "--output",
+      bodyPath,
+      "--write-out",
+      "%{http_code}",
+    ];
+    if (options.method) args.push("--request", options.method);
+    const { stdout } = await execute("vercel", args, {
+      timeout: 45000,
+      maxBuffer: 1024 * 1024,
+    });
+    const status = Number(stdout.trim());
+    const raw = await fs.readFile(headersPath, "utf8");
+    const headers = new Headers();
+    for (const line of raw.trim().split(/\r?\n/)) {
+      const index = line.indexOf(":");
+      if (index > 0)
+        headers.set(line.slice(0, index), line.slice(index + 1).trim());
+    }
+    const body = await fs.readFile(bodyPath);
+    return new Response([204, 304].includes(status) ? null : body, {
+      status,
+      headers,
+    });
+  } finally {
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+}
 async function check(name, run) {
   try {
     await run();
