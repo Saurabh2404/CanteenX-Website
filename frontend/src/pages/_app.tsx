@@ -18,10 +18,10 @@ export default function App({ Component, pageProps }: AppProps) {
           content="Explore product categories, savings and visitor information for ARDH SAINIK CANTEEN, Kanti."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" sizes="32x32" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/favicon.ico?v=light-logo" sizes="32x32" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=light-logo" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=light-logo" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=light-logo" />
         <meta
           name="robots"
           content={site.indexable ? "index,follow" : "noindex,nofollow"}
