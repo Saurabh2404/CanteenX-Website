@@ -1,5 +1,5 @@
-import { site } from "@/config/site";
-import Head from "next/head";
+import { PageSeo } from "@/components/page-seo";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { useRouter } from "next/router";
 import type { GetStaticProps } from "next";
 import { Catalog } from "@/components/catalog";
@@ -34,21 +34,18 @@ export default function Products(props: ProductsProps) {
   const initialQuery = typeof router.query.q === "string" ? router.query.q : "";
   return (
     <>
-      <Head>
-        <title>Explore products | Ardh Sainik Canteen Kanti</title>
-        <script type="application/ld+json" key="breadcrumb-schema" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          "@context":"https://schema.org", "@type":"BreadcrumbList", itemListElement:[
-            {"@type":"ListItem",position:1,name:"Home",item:site.url+"/"},
-            {"@type":"ListItem",position:2,name:"Products",item:site.url+"/products"}
-          ]
-        }).replace(/</g,"\\u003c") }} />
-        <meta
-          name="description"
-          content="Explore our most-sold canteen products with at least 10% off MRP."
-        />
-      </Head>
+      <PageSeo
+        title="Grocery offers in Kanti | Ardh Sainik Canteen"
+        description="Browse recently sold groceries and everyday essentials with at least 10% off MRP at Ardh Sainik Canteen Kanti. Compare prices before your store visit."
+        path="/products"
+      />
       <main id="main" className="section catalogue">
-        <nav aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">Products</span></nav>
+        <Breadcrumbs
+          items={[
+            { name: "Home", path: "/" },
+            { name: "Products", path: "/products" },
+          ]}
+        />
         <p className="eyebrow">THE CANTEEN COLLECTION</p>
         <h1>
           Find your <em>everyday.</em>

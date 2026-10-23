@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Search } from "lucide-react";
@@ -15,7 +16,7 @@ export function Catalog({
   popularityAvailable?: boolean;
 }) {
   const router = useRouter();
-  const [category, setCategory] = useState(initialCategory);
+  const category = initialCategory;
   const [query, setQuery] = useState(initialQuery);
   const [limit, setLimit] = useState(24);
   useEffect(() => {
@@ -36,17 +37,17 @@ export function Catalog({
       <div className="catalog-controls">
         <div className="filters" aria-label="Filter products">
           {[{ slug: "all", name: "All products" }, ...categories].map((c) => (
-            <button
-              aria-pressed={category === c.slug}
+            <Link
+              href={
+                c.slug === "all" ? "/products" : `/products/category/${c.slug}`
+              }
+              prefetch={false}
+              aria-current={category === c.slug ? "page" : undefined}
               className={category === c.slug ? "active" : ""}
               key={c.slug}
-              onClick={() => {
-                setCategory(c.slug);
-                setLimit(24);
-              }}
             >
               {c.name}
-            </button>
+            </Link>
           ))}
         </div>
         <label className="search">
@@ -85,6 +86,9 @@ export function Catalog({
                   src={p.image}
                   alt={p.name}
                   loading="lazy"
+                  width={320}
+                  height={320}
+                  decoding="async"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
                     e.currentTarget.parentElement?.classList.add(
@@ -106,7 +110,11 @@ export function Catalog({
               )}
             </div>
             <small>{categories.find((c) => c.slug === p.category)?.name}</small>
-            <h3>{p.name}</h3>
+            <h2 className="product-title">
+              <Link href={`/products/item/${p.slug}`} prefetch={false}>
+                {p.name}
+              </Link>
+            </h2>
             {p.popularityRank > 0 && p.popularityRank <= 20 && (
               <span className="popular-label">Frequently purchased</span>
             )}
