@@ -79,9 +79,10 @@ export default function Home({
             </em>
           </h1>
           <p>
-            Your everyday essentials at Ground Floor, SS-Complex, Station Road,
-            opposite Block Gate, Kanti, Bihar. Explore the ARDH SAINIK CANTEEN
-            catalogue before you visit.
+            Ardh Sainik Canteen Kanti is your local grocery and discount store
+            for everyday essentials. Visit our canteen in Kanti at Ground Floor,
+            SS-Complex, Station Road, opposite Block Gate, Muzaffarpur, Bihar.
+            Explore our products and savings before you visit.
           </p>
           <div className="actions">
             <Link className="button" href="/products">

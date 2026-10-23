@@ -15,7 +15,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Ardh Sainik Canteen Kanti</title>
         <meta
           name="description"
-          content="Explore product categories, savings and visitor information for ARDH SAINIK CANTEEN, Kanti."
+          content="Ardh Sainik Canteen Kanti: your grocery and discount store on Station Road, Kanti, Muzaffarpur. Explore everyday essentials, product categories and savings."
+        />
+        <meta
+          name="keywords"
+          content="ardhsainikcanteen, ardhsainikcanteenkanti, kanticanteen, canteen in kanti, sainikcanteenkanti, grocerystore, discountstore, armycanteen"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico?v=light-logo" sizes="32x32" />
