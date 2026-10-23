@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { GoogleReviewsSection } from "@/components/google-reviews";
 import Link from "next/link";
 import {
@@ -12,6 +13,20 @@ import { categories, site } from "@/config/site";
 import type { GetStaticProps } from "next";
 import { apiFetch } from "@/utils/api";
 import type { Product } from "@/types/catalog";
+const faqs = [
+  {
+    "question": "Can I order products online?",
+    "answer": "This website helps you explore products and plan an in-store visit. Online ordering is not currently available."
+  },
+  {
+    "question": "Are the displayed prices and offers final?",
+    "answer": "The catalogue reads current POS selling prices and MRPs and refreshes every minute. Prices and availability may change; please confirm at the canteen."
+  },
+  {
+    "question": "Where can I find the latest opening hours?",
+    "answer": "Confirmed timings and holiday announcements will appear in the visitor information section."
+  }
+];
 type HomeProps = {
   heroImage: {
     url: string;
@@ -36,6 +51,12 @@ export default function Home({
 }: HomeProps) {
   return (
     <main id="main">
+      <Head>
+        <script type="application/ld+json" key="faq-schema" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org", "@type": "FAQPage",
+          mainEntity: faqs.map(({question, answer}) => ({"@type":"Question", name:question, acceptedAnswer:{"@type":"Answer",text:answer}}))
+        }).replace(/</g, "\\u003c") }} />
+      </Head>
       {unavailable && (
         <p className="notice">
           Our catalogue is temporarily unavailable. Please try again shortly or
@@ -317,28 +338,12 @@ export default function Home({
       <section className="section faq">
         <p className="eyebrow">A LITTLE HELP</p>
         <h2>Before you visit.</h2>
-        <details>
-          <summary>Can I order products online?</summary>
-          <p>
-            This website helps you explore products and plan an in-store visit.
-            Online ordering is not currently available.
-          </p>
-        </details>
-        <details>
-          <summary>Are the displayed prices and offers final?</summary>
-          <p>
-            The catalogue reads current POS selling prices and MRPs and
-            refreshes every minute. Prices and availability may change; please
-            confirm at the canteen.
-          </p>
-        </details>
-        <details>
-          <summary>Where can I find the latest opening hours?</summary>
-          <p>
-            Confirmed timings and holiday announcements will appear in the
-            visitor information section.
-          </p>
-        </details>
+        {faqs.map(({ question, answer }) => (
+          <details key={question}>
+            <summary>{question}</summary>
+            <p>{answer}</p>
+          </details>
+        ))}
       </section>
     </main>
   );

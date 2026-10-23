@@ -5,7 +5,9 @@ export const site = {
     (process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : "http://localhost:3001"),
-  indexable: process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true",
+  indexable:
+    process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true" &&
+    (!process.env.VERCEL_ENV || process.env.VERCEL_ENV === "production"),
   address:
     "Ground Floor, SS-Complex, Station Road, opposite Block Gate, Kanti, Muzaffarpur, Bihar 843109",
   phone: "+91 73559 73262",

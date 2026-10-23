@@ -1,3 +1,4 @@
+import { site } from "@/config/site";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import type { GetStaticProps } from "next";
@@ -35,12 +36,19 @@ export default function Products(props: ProductsProps) {
     <>
       <Head>
         <title>Explore products | Ardh Sainik Canteen Kanti</title>
+        <script type="application/ld+json" key="breadcrumb-schema" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context":"https://schema.org", "@type":"BreadcrumbList", itemListElement:[
+            {"@type":"ListItem",position:1,name:"Home",item:site.url+"/"},
+            {"@type":"ListItem",position:2,name:"Products",item:site.url+"/products"}
+          ]
+        }).replace(/</g,"\\u003c") }} />
         <meta
           name="description"
           content="Explore our most-sold canteen products with at least 10% off MRP."
         />
       </Head>
       <main id="main" className="section catalogue">
+        <nav aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">Products</span></nav>
         <p className="eyebrow">THE CANTEEN COLLECTION</p>
         <h1>
           Find your <em>everyday.</em>

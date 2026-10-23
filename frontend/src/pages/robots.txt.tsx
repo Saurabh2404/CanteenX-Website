@@ -4,7 +4,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   res.setHeader("Content-Type", "text/plain");
   res.write(
     site.indexable
-      ? `User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${site.url}/sitemap.xml\n`
+      ? `User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`
       : "User-agent: *\nDisallow: /\n",
   );
   res.end();
