@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { SiteLayout } from "@/components/site-layout";
+import { GoogleAnalytics } from "@/components/google-analytics";
 import { site } from "@/config/site";
 import "@/styles/brand-fonts.css";
 import "@/styles/globals.css";
@@ -12,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const indexable = site.indexable && router.pathname !== "/404";
   return (
     <>
+      <GoogleAnalytics />
       <Head>
         <title>Ardh Sainik Canteen Kanti</title>
         <meta
