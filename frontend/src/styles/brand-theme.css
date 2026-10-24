@@ -429,7 +429,7 @@ header {
   border-radius: 14px;
   min-height: 300px;
 }
-.offer-section .offer-art-title {
+.offer-section p.offer-art-title {
   color: white;
   font:
     750 34px/1.15 "Inter",
