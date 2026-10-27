@@ -2,7 +2,12 @@ import { Html, Head, Main, NextScript } from "next/document";
 export default function Document() {
   return (
     <Html lang="en">
-      <Head />
+      <Head>
+        <meta
+          name="google-site-verification"
+          content="ibqBKw579j1JeGHM8-rWU01SCBM98-WhLtmTle8gpGI"
+        />
+      </Head>
       <body>
         <Main />
         <NextScript />
