@@ -7,6 +7,7 @@ import { site } from "@/config/site";
 import "@/styles/brand-fonts.css";
 import "@/styles/globals.css";
 import "@/styles/brand-theme.css";
+import "@/styles/editor-design.css";
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const path = router.asPath.split("?")[0].split("#")[0];

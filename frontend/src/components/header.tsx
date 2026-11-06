@@ -5,7 +5,7 @@ import { site } from "@/config/site";
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <>
+    <div className="site-sidebar">
       <div className="announcement">
         <div>
           <span>By the Soldier, for the Community</span>
@@ -80,6 +80,10 @@ export function Header() {
           </Link>
         </nav>
       </div>
-    </>
+      <div className="sidebar-signoff">
+        <small>ROOTED IN SERVICE.</small>
+        <strong>Made for our community.</strong>
+      </div>
+    </div>
   );
 }
