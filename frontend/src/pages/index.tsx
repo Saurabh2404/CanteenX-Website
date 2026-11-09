@@ -113,7 +113,7 @@ export default function Home({
             <em>
               Everyday essentials.
               <br />
-              More value for every family.
+              <span>More value for every family.</span>
             </em>
           </h1>
           <p>
@@ -163,15 +163,16 @@ export default function Home({
             </span>
           </div>
         </div>
-        <div className="hero-index">SERVICE • COMMUNITY • EVERYDAY VALUE</div>
       </section>
       <div className="value-strip">
+        <span>Service · Community · Everyday value</span>
+        <i aria-hidden="true">✦</i>
         <span>Groceries & staples</span>
-        <i>✦</i>
+        <i aria-hidden="true">✦</i>
         <span>Home essentials</span>
-        <i>✦</i>
+        <i aria-hidden="true">✦</i>
         <span>Personal care</span>
-        <i>✦</i>
+        <i aria-hidden="true">✦</i>
         <span>Everyday savings</span>
       </div>
       <section className="section" id="categories">
@@ -195,10 +196,22 @@ export default function Home({
               href={`/products/category/${c.slug}`}
               prefetch={false}
             >
+              <span className="category-number" aria-hidden="true">
+                0{i + 1}
+              </span>
+              <div className="category-title">
+                <div>
+                  <h3>{c.name}</h3>
+                  <span className="category-hindi" lang="hi">
+                    {c.hindi}
+                  </span>
+                </div>
+                <ArrowUpRight size={21} />
+              </div>
+              <p>{c.detail}</p>
               <div
                 className={`category-image category-preview category-tone-${c.tone}`}
               >
-                <span className="category-number">0{i + 1}</span>
                 <div
                   className={`category-packshots ${["food", "beverages", "cooking-foods"].includes(c.slug) ? "category-packshots-expanded" : ""}`}
                 >
@@ -214,7 +227,7 @@ export default function Home({
                       <img
                         key={product.slug}
                         src={product.image}
-                        alt={product.name}
+                        alt=""
                         loading="lazy"
                         width={160}
                         height={160}
@@ -223,123 +236,118 @@ export default function Home({
                     ))}
                 </div>
               </div>
-              <div className="category-title">
-                <div>
-                  <h3>{c.name}</h3>
-                  <span className="category-hindi" lang="hi">
-                    {c.hindi}
-                  </span>
-                </div>
-                <ArrowUpRight size={21} />
-              </div>
-              <p>{c.detail}</p>
             </Link>
           ))}
         </div>
       </section>
-      {bestSellers.length > 0 && (
-        <section className="section best-sellers">
-          <div className="section-head">
-            <div>
-              <p className="eyebrow">COMMUNITY FAVOURITES</p>
-              <h2>Our community’s favourites.</h2>
+      <div className="savings-grid">
+        {bestSellers.length > 0 && (
+          <section className="section best-sellers">
+            <div className="section-head">
+              <div>
+                <p className="eyebrow">COMMUNITY FAVOURITES</p>
+                <h2>Our community’s favourites.</h2>
+              </div>
+              <span className="muted">
+                Most sold · last 90 days · At least 10% off
+              </span>
             </div>
-            <span className="muted">
-              Most sold · last 90 days · At least 10% off
-            </span>
+            <div className="category-grid">
+              {bestSellers.map((p) => (
+                <Link
+                  href={`/products/item/${p.slug}`}
+                  prefetch={false}
+                  className="product"
+                  key={p.slug}
+                >
+                  <div className="product-image">
+                    {p.image ? (
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        loading="lazy"
+                        width={320}
+                        height={320}
+                        decoding="async"
+                      />
+                    ) : (
+                      <span className="no-photo">
+                        Product photo
+                        <br />
+                        coming soon
+                      </span>
+                    )}
+                  </div>
+                  <h3>{p.name}</h3>
+                  <strong>₹{p.price.toLocaleString("en-IN")}</strong>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+        <section className="offer-section" id="offers">
+          <div>
+            <p className="eyebrow">MORE IN YOUR BASKET</p>
+            <h2>
+              More savings.
+              <br />
+              <em>Every single day.</em>
+            </h2>
+            <p>
+              Explore selling prices and MRPs from our canteen catalogue.
+              Explore our most-sold products with at least 10% off MRP, ordered
+              by units sold over the last 90 days. Please confirm availability
+              in store.
+            </p>
+            <Link className="button" href="/products">
+              Discover the catalogue <ArrowUpRight size={18} />
+            </Link>
           </div>
-          <div className="category-grid">
-            {bestSellers.map((p) => (
-              <Link
-                href={`/products/item/${p.slug}`}
-                prefetch={false}
-                className="product"
-                key={p.slug}
-              >
-                <div className="product-image">
-                  {p.image ? (
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      loading="lazy"
-                      width={320}
-                      height={320}
-                      decoding="async"
-                    />
-                  ) : (
-                    <span className="no-photo">
-                      Product photo
-                      <br />
-                      coming soon
-                    </span>
-                  )}
-                </div>
-                <h3>{p.name}</h3>
-                <strong>₹{p.price.toLocaleString("en-IN")}</strong>
-              </Link>
-            ))}
+          <div className="offer-art">
+            <span>EVERYDAY VALUE</span>
+            <ShoppingBasket size={95} strokeWidth={1} />
+            <p className="offer-art-title">
+              Good things.
+              <br />
+              Better value.
+            </p>
+            <small>Explore our canteen catalogue</small>
           </div>
         </section>
-      )}
-      <section className="offer-section" id="offers">
-        <div>
-          <p className="eyebrow">MORE IN YOUR BASKET</p>
-          <h2>
-            More savings.
-            <br />
-            <em>Every single day.</em>
-          </h2>
-          <p>
-            Explore selling prices and MRPs from our canteen catalogue. Explore
-            our most-sold products with at least 10% off MRP, ordered by units
-            sold over the last 90 days. Please confirm availability in store.
-          </p>
-          <Link className="button" href="/products">
-            Discover the catalogue <ArrowUpRight size={18} />
-          </Link>
-        </div>
-        <div className="offer-art">
-          <span>EVERYDAY VALUE</span>
-          <ShoppingBasket size={95} strokeWidth={1} />
-          <p className="offer-art-title">
-            Good things.
-            <br />
-            Better value.
-          </p>
-          <small>Explore our canteen catalogue</small>
-        </div>
-      </section>
-      <section className="section" id="events">
-        <div className="section-head">
-          <div>
-            <p className="eyebrow">AROUND THE CANTEEN</p>
-            <h2>News from your canteen.</h2>
+      </div>
+      <div className="community-grid">
+        <section className="section" id="events">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">AROUND THE CANTEEN</p>
+              <h2>News from your canteen.</h2>
+            </div>
+            <span className="muted">Community & updates</span>
           </div>
-          <span className="muted">Community & updates</span>
-        </div>
-        <div className="two-grid">
-          <article className="update-card">
-            <span className="pill">STORE UPDATES</span>
-            <h3>Something to look forward to.</h3>
-            <p>
-              Seasonal offers, new arrivals, and canteen announcements will be
-              shared here. No events have been announced yet.
-            </p>
-          </article>
-          <article className="update-card light">
-            <span className="pill">LET’S STAY IN TOUCH</span>
-            <h3>A familiar voice. A little help.</h3>
-            <p>
-              Have a question about a product or planning your visit? Call the
-              canteen and we’ll be happy to help.
-            </p>
-            <a className="text-link my-4" href="tel:+917355973262">
-              {site.phone} ↗
-            </a>
-          </article>
-        </div>
-      </section>
-      <GoogleReviewsSection />
+          <div className="two-grid">
+            <article className="update-card">
+              <span className="pill">STORE UPDATES</span>
+              <h3>Something to look forward to.</h3>
+              <p>
+                Seasonal offers, new arrivals, and canteen announcements will be
+                shared here. No events have been announced yet.
+              </p>
+            </article>
+            <article className="update-card light">
+              <span className="pill">LET’S STAY IN TOUCH</span>
+              <h3>A familiar voice. A little help.</h3>
+              <p>
+                Have a question about a product or planning your visit? Call the
+                canteen and we’ll be happy to help.
+              </p>
+              <a className="text-link my-4" href="tel:+917355973262">
+                {site.phone} ↗
+              </a>
+            </article>
+          </div>
+        </section>
+        <GoogleReviewsSection />
+      </div>
       <section className="visit section" id="visit">
         <div>
           <p className="eyebrow">WE’LL SEE YOU AT THE CANTEEN</p>

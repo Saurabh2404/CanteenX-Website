@@ -5,39 +5,25 @@ import { site } from "@/config/site";
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <div className="site-sidebar">
+    <header className="site-header">
       <div className="announcement">
         <div>
-          <span>By the Soldier, for the Community</span>
+          <Link
+            href="/"
+            className="utility-brand"
+            aria-label="Ardh Sainik Canteen home"
+          >
+            <img src="/canteen-logo-small.webp" alt="" width={30} height={30} />
+            <span>Ardh Sainik Canteen</span>
+          </Link>
+          <span className="utility-motto">
+            By the Soldier, for the Community
+          </span>
           <a href="tel:+917355973262">
             <Phone size={12} /> {site.phone}
           </a>
         </div>
       </div>
-      <header>
-        <Link href="/" className="brand">
-          <img
-            src="/canteen-logo-small.webp"
-            alt="Ardh Sainik Canteen logo"
-            width={64}
-            height={64}
-          />
-          <span>
-            <strong lang="hi">अर्ध सैनिक कैंटीन</strong>
-            <b>ARDH SAINIK CANTEEN</b>
-            <small lang="hi">सैनिक का सलाम – आम जनता के लिए</small>
-          </span>
-        </Link>
-        <div className="header-purpose">
-          <span className="tricolor">
-            <i />
-            <i />
-            <i />
-          </span>
-          <strong>Everyday value. Trusted local service.</strong>
-          <small>Station Road, Kanti · Your neighbourhood canteen</small>
-        </div>
-      </header>
       <div
         className="navigation-bar"
         onKeyDown={(event) => {
@@ -80,10 +66,6 @@ export function Header() {
           </Link>
         </nav>
       </div>
-      <div className="sidebar-signoff">
-        <small>ROOTED IN SERVICE.</small>
-        <strong>Made for our community.</strong>
-      </div>
-    </div>
+    </header>
   );
 }
