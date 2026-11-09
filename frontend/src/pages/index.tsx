@@ -199,17 +199,9 @@ export default function Home({
                 className={`category-image category-preview category-tone-${c.tone}`}
               >
                 <span className="category-number">0{i + 1}</span>
-                <div
-                  className={`category-packshots ${["food", "beverages", "cooking-foods"].includes(c.slug) ? "category-packshots-expanded" : ""}`}
-                >
+                <div className="category-packshots category-packshots-expanded">
                   {categoryProducts
                     .filter((p) => p.category === c.slug)
-                    .slice(
-                      0,
-                      ["food", "beverages", "cooking-foods"].includes(c.slug)
-                        ? 6
-                        : 3,
-                    )
                     .map((product) => (
                       <img
                         key={product.slug}

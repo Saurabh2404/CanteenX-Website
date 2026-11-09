@@ -25,13 +25,8 @@ export function uniqueCategoryPhotos(products) {
   const counts = new Map();
   const photos = [];
   for (const product of products) {
-    const limit = ["food", "beverages", "cooking-foods"].includes(
-      product.category,
-    )
-      ? 6
-      : 3;
     const count = counts.get(product.category) ?? 0;
-    if (count >= limit) continue;
+    if (count >= 6) continue;
     const photo = publicProduct(product);
     if (!photo.image) continue;
     const version = photo.image.split("/").at(-1);
