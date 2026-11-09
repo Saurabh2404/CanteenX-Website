@@ -1,6 +1,10 @@
 import { getHeroMetadata } from "./heroService.js";
 import { createSnapshotCache } from "../utils/snapshotCache.js";
-import { decodeProductImage, publicProduct } from "../utils/images.js";
+import {
+  decodeProductImage,
+  publicProduct,
+  uniqueCategoryPhotos,
+} from "../utils/images.js";
 import { connectDatabase } from "../config/database.js";
 import Product from "../models/Product.js";
 import Sale from "../models/Sale.js";
@@ -102,18 +106,9 @@ export async function getPublicCatalog() {
 export async function getHomeData() {
   const data = await getCatalog();
   const heroImage = await getHeroMetadata();
-  const categories = [...new Set(data.products.map((p) => p.category))];
-  const categoryProducts = categories.flatMap((category) =>
-    data.products
-      .filter((p) => p.category === category && p.image)
-      .slice(
-        0,
-        ["food", "beverages", "cooking-foods"].includes(category) ? 6 : 3,
-      ),
-  );
   return {
     heroImage,
-    categoryProducts: categoryProducts.map(publicProduct),
+    categoryProducts: uniqueCategoryPhotos(data.products),
     bestSellers: data.popularityAvailable
       ? discountedBestSellers(data.products).slice(0, 4).map(publicProduct)
       : [],

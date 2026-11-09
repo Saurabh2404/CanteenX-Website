@@ -19,6 +19,29 @@ export function productImageUrl(product) {
 export function publicProduct(product) {
   return { ...product, image: productImageUrl(product) };
 }
+// A SKU or URL may differ while the underlying product photo is identical.
+export function uniqueCategoryPhotos(products) {
+  const seen = new Set();
+  const counts = new Map();
+  const photos = [];
+  for (const product of products) {
+    const limit = ["food", "beverages", "cooking-foods"].includes(
+      product.category,
+    )
+      ? 6
+      : 3;
+    const count = counts.get(product.category) ?? 0;
+    if (count >= limit) continue;
+    const photo = publicProduct(product);
+    if (!photo.image) continue;
+    const version = photo.image.split("/").at(-1);
+    if (seen.has(version)) continue;
+    seen.add(version);
+    counts.set(product.category, count + 1);
+    photos.push(photo);
+  }
+  return photos;
+}
 export function sendImage(req, res, image, version) {
   res.setHeader("Cache-Control", "no-store");
   if (!image || (version && version !== image.version))
